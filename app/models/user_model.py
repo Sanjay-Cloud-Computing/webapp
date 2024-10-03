@@ -12,5 +12,5 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(255))
-    account_updated = db.Column(db.DateTime, default=datetime.strptime(format_datetime(), "%Y-%m-%dT%H:%M:%S.%fZ"),onupdate=datetime.strptime(format_datetime(), "%Y-%m-%dT%H:%M:%S.%fZ")) 
-    account_created = db.Column(db.DateTime, default=datetime.strptime(format_datetime(), "%Y-%m-%dT%H:%M:%S.%fZ"))
+    account_updated = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc),onupdate=lambda: datetime.now(timezone.utc)) 
+    account_created = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))

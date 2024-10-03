@@ -32,7 +32,11 @@ def verify_password(username, password):
 def get_user_details():
 
     user_data = db.session.query(User).filter_by(email=auth.username()).first()
-    response_body = {
+    print(user_data)
+    if request.data or len(request.args) > 0 or request.data.strip() == b'{}' or request.form:
+        return abort(response_handler(400))
+
+    else:response_body = {
                 "id": user_data.id,
                 "first_name": user_data.first_name,
                 "last_name": user_data.last_name,
