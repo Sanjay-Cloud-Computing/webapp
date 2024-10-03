@@ -1,79 +1,150 @@
-# Health Check App using Flask
+# Project Setup & Deployment Guide
 
-This Flask app exposes a health check endpoint (`/healthz`) to verify the status of the application and its connection to a MySQL database. The application uses SQLAlchemy for database interactions and leverages `python-dotenv` for managing environment variables.
+This document provides  instructions for setting up a development environment, deploying the web application to a remote server, configuring databases, and running the Flask application.
 
 ## Table of Contents
 
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Environment Variables](#environment-variables)
+- [Prerequisites](#prerequisites)
+- [Virtual Machine Configuration](#virtual-machine-configuration)
+  - [Step 1: Establishing SSH Connection](#step-1-establishing-ssh-connection)
+  - [Step 2: Transferring Files to the VM](#step-2-transferring-files-to-the-vm)
+  - [Step 3: Configuring VM Storage](#step-3-configuring-vm-storage)
+- [Database Setup](#database-setup)
+  - [Installing Database Server](#installing-database-server)
+  - [Configuring MySQL Database](#configuring-mysql-database)
+- [Application Setup](#application-setup)
+  - [Creating a Python Virtual Environment](#creating-a-python-virtual-environment)
+  - [Installing Python Dependencies](#installing-python-dependencies)
 - [Running the Application](#running-the-application)
-- [Endpoints](#endpoints)
-- [Error Handling](#error-handling)
 
-## Requirements
+## Prerequisites
 
-Ensure you have the following installed on your machine:
+Before setting up the environment, ensure the following tools and configurations are available:
 
-- Python 3.6 or higher
-- MySQL database
-- Flask
-- SQLAlchemy
-- `python-dotenv` for environment variable management
+- A Ubuntu-based virtual machine.
+- SSH access configured with public and private keys.
+- Administrative privileges on the VM.
+- Required development packages for Python and MySQL.
 
-## Installation
+---
 
-1. ### Clone the Repository
+## Virtual Machine Configuration
 
-        git clone <https://github.com/Sanjay-Cloud-Computing/webapp.git>
-        cd repo webapp
+### Step 1: Establishing SSH Connection
 
-2. ### Create and Activate a Virtual Environment
+1. Configure your SSH key and connect to your VM from your local machine:
 
-        pip3 install virtualenv
-        virtualenv env
-        source env/bin/activate
+    ```bash
+    ssh root@your_vm_ip
+    ```
 
-3. ### Install Dependencies: Install the required Python packages by running
+2. Verify the connection before continuing
 
-        pip install -r src/requirements.txt
+### Step 2: Transferring Files to the VM
 
-## Set Up Environment Variables
+1. **Upload the application source code** to the remote server using `scp`:
 
-Create a .env file in the root of the project to store your MySQL credentials and other environment variables.
+   ```bash
+   scp -i ~/.ssh/your_ssh_key your_project.zip root@your_vm_ip:/root/
+   ```
 
-### Structural format of .env file as below
+2. Unzip the transferred files on the remote server:
 
-    DB_USERNAME=your_db_username
-    DB_PASSWORD=your_db_password
-    DB_NAME=your_db_name
-    DB_HOST=localhost
-    DB_PORT=3306
+   ```bash
+   unzip your_project.zip
+   ```
 
-    These values will be loaded automatically by python-dotenv
+### Step 3: Configuring VM Storage
 
-## Running the Application
+1. Check the current storage and memory allocation:
 
-1. Make sure your MySQL database is up and running
-2. Run the Flask application: python3 src/app.py
-3. Visit the /healthz endpoint in your browser
+   ```bash
+    free -h
+    ```
 
-## Endpoints
+2. Add swap memory if required:
 
-**/healthz**
-    This endpoint checks the health of the application and the connection to the MySQL database.
+    ```bash
+    sudo fallocate -l 2G /swapfile
+    sudo chmod 600 /swapfile
+    sudo mkswap /swapfile
+    sudo swapon /swapfile
+    ```
 
-    Method: GET
+3. Persist the swap configuration:
 
-    Response:
-        200 OK: The application is healthy, and the database connection is working.
-        503 Service Unavailable: The application or the database connection is not working.
+    ```bash
+    echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+    ```
 
-## Error Handling
+## Database Setup
 
-1. 400 Bad Request: Returned if the request contains query parameters or form data, which are not allowed.
-2. 503 Service Unavailable: Returned if there is a problem connecting to the database.
-3. 405 Method Not Allowed: Returned if a request is made to /healthz with any method other than GET.
-4. 404 Not Found: Returned if a non-existent route is accessed.
+### Installing Database Server
 
-All responses are returned without any payload and include the Cache-Control: no-cache header to prevent caching
+1. Install MySQL:
+
+```bash
+sudo apt install mysql-server -y
+```
+
+2. Start the database service:
+
+```bash
+sudo systemctl start mysql
+```
+
+### Configuring MySQL Database
+
+1. Log into the MySQL database:
+
+```bash
+sudo mysql -u root -p
+```
+
+2. Create a new database and user:
+
+```bash
+CREATE DATABASE my_database;
+CREATE USER 'db_user'@'localhost' IDENTIFIED BY 'your_password';
+GRANT ALL PRIVILEGES ON my_database.* TO 'db_user'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+## Application Setup
+
+### Creating a Python Virtual Environment
+
+1. Create and activate a virtual environment:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### Installing Python Dependencies
+
+1. Install required Python packages:
+
+```bash
+pip install -r requirements.txt
+```
+
+### Running the Application
+
+1. Run the Flask application:
+
+```bash
+python3 app.py
+```
+
+2. On VM Public:
+
+```bash
+flask run --host=0.0.0.0 --port=5000
+```
+
+3. Verify the application::
+
+```bash
+curl http://your_vm_ip:5000/
+```
