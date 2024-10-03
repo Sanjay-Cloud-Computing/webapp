@@ -1,6 +1,8 @@
 from app.models.user_model import User
 from app import db
 from app.utilities.login_user_utils import verify_password, hash_password
+from datetime import datetime
+from app.utilities.utc_convert_datetime import format_datetime
 
 class AuthService:
     
@@ -31,7 +33,7 @@ class AuthService:
             if not data['password'].strip():
                 raise ValueError
             user_data.password = hash_password(data['password'])
-
+        # user_data.account_updated =datetime.strptime(format_datetime(), "%Y-%m-%dT%H:%M:%S.%fZ")
         db.session.commit()
 
         return user_data
