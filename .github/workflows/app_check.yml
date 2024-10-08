@@ -1,10 +1,10 @@
-name: App CI Pipeline
+name: CI Pipeline
 
 on:
   push:
     branches:
       - main
-  #     - develop
+      - develop
   # pull_request:
   #   branches:
   #     - main
@@ -48,7 +48,7 @@ jobs:
           source venv/bin/activate
           pip install -r requirement.txt
 
-      # Step 4: Wait for MySQL to be available
+      # Step 4: Wait for MySQL service to be available
       - name: Wait for MySQL Service
         run: |
           while ! mysqladmin ping -h127.0.0.1 -utest_user -ptest_pass --silent; do
@@ -56,19 +56,21 @@ jobs:
             sleep 5
           done
 
-      # Step 5: Set up MySQL Database (If required by your application)
+      # Step 5: Set up the database schema directly using Flask commands
       - name: Set Up Database Schema
+        env:
+          DATABASE_URL: "mysql+pymysql://test_user:test_pass@127.0.0.1:3306/test_db"
         run: |
           source venv/bin/activate
-          python manage.py db upgrade  # Or any command to set up schema
+          python -c 'from app import create_app, db; app = create_app(); with app.app_context(): db.create_all()'
 
-      # Step 6: Run Health Check Unit Test
+      # Step 6: Run Health Check Unit Tests
       - name: Run Health Check Tests
         run: |
           source venv/bin/activate
           python -m unittest discover -s tests -p "test_health_check.py"
 
-      # Step 7: Run User API Unit Test
+      # Step 7: Run User API Unit Tests
       - name: Run User API Tests
         env:
           DATABASE_URL: "mysql+pymysql://test_user:test_pass@127.0.0.1:3306/test_db"
