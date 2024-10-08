@@ -46,7 +46,7 @@ jobs:
         run: |
           python -m venv venv
           source venv/bin/activate
-          pip install -r requirements.txt
+          pip install -r requirement.txt
 
       # Step 4: Wait for MySQL to be available
       - name: Wait for MySQL Service
