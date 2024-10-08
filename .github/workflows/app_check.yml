@@ -62,13 +62,13 @@ jobs:
           source venv/bin/activate
           python manage.py db upgrade  # Or any command to set up schema
 
-      # Step 6: Run Health Check Unit Tests
+      # Step 6: Run Health Check Unit Test
       - name: Run Health Check Tests
         run: |
           source venv/bin/activate
           python -m unittest discover -s tests -p "test_health_check.py"
 
-      # Step 7: Run User API Unit Tests
+      # Step 7: Run User API Unit Test
       - name: Run User API Tests
         env:
           DATABASE_URL: "mysql+pymysql://test_user:test_pass@127.0.0.1:3306/test_db"
