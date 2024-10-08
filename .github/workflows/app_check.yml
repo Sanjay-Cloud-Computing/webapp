@@ -1,10 +1,10 @@
-name: App CI Pipeline
+name: Flask App CI Pipeline
 
 on:
   push:
     branches:
       - main
-  #     - develop
+      - develop
   # pull_request:
   #   branches:
   #     - main
@@ -41,7 +41,7 @@ jobs:
         with:
           python-version: 3.8
 
-      # Step 3: Install dependencies
+      # Step 3: Install dependencies from requirements.txt
       - name: Install Dependencies
         run: |
           python -m venv venv
@@ -56,22 +56,22 @@ jobs:
             sleep 5
           done
 
-      # Step 5: Set up the database schema using setup_db.py
+      # Step 5: Set up the database schema directly using Flask commands
       - name: Set Up Database Schema
         run: |
           source venv/bin/activate
-          python setup_db.py
+          python -c "from app import create_app, db; app = create_app(); with app.app_context(): db.create_all()"
 
-      # Step 6: Run Health Check Unit Tests
+      # Step 6: Run Health Check Unit Tests (located inside `app/test`)
       - name: Run Health Check Tests
         run: |
           source venv/bin/activate
-          python -m unittest discover -s tests -p "test_health_check.py"
+          python -m unittest discover -s app/test -p "test_health_check.py"
 
-      # Step 7: Run User API Unit Tests
+      # Step 7: Run User API Unit Tests (located inside `app/test`)
       - name: Run User API Tests
         env:
           DATABASE_URL: "mysql+pymysql://test_user:test_pass@127.0.0.1:3306/test_db"
         run: |
           source venv/bin/activate
-          python -m unittest discover -s tests -p "test_user.py"
+          python -m unittest discover -s app/test -p "test_user.py"
