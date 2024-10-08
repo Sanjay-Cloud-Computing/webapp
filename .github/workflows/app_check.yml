@@ -49,8 +49,8 @@ jobs:
       # Search for "error" in health check output log and fail if found
       - name: Check Health Check Test Output for Errors
         run: |
-          cat health_check_output.log
-          if grep -i "error" health_check_output.log; then
+          cat healthcheck_output.log
+          if grep -i "error" healthcheck_output.log; then
             echo "Error found in Health Check Test output!"
             exit 1
           else
