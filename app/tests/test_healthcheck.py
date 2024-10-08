@@ -12,8 +12,8 @@ class HealthCheckTestCase(unittest.TestCase):
 
     def test_health_check_with_query_params(self):
         """Deliberate failure by expecting the wrong status code."""
-        response = self.app.get('/healthz?param=value')
-        self.assertEqual(response.status_code, 400, "Deliberate failure: expected status code 500 instead of 400")
+        # response = self.app.get('/healthz?param=value')
+        self.assertEqual(response.status_code, 500, "Deliberate failure: expected status code 500 instead of 400")
 
     def test_health_check_with_form_data(self):
         """Deliberate failure by expecting incorrect header value."""
@@ -37,3 +37,5 @@ class HealthCheckTestCase(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
