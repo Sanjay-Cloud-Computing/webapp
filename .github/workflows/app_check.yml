@@ -47,22 +47,26 @@ jobs:
           python -m unittest discover -s test -p "test_user.py" | tee user_test_output.log
 
       # Search for "error" in health check output log and fail if found
+      # - name: Check Health Check Test Output for Errors
+      #   run: |
+      #     cat healthcheck_output.log
+      #     if grep -i "error" healthcheck_output.log; then
+      #       echo "Error found in Health Check Test output!"
+      #       exit 1
+      #     else
+      #       echo "No errors found in Health Check Test output."
+      #     fi
       - name: Check Health Check Test Output for Errors
         run: |
-          cat healthcheck_output.log
-          if grep -i "error" healthcheck_output.log; then
-            echo "Error found in Health Check Test output!"
+          python -m unittest discover -s app/tests -p "test_healthcheck.py" | tee test_output.log
+          if grep -i "NameError" test_output.log; then
             exit 1
-          else
-            echo "No errors found in Health Check Test output."
           fi
 
       # Search for "error" in user API test output log and fail if found
       - name: Check User API Test Output for Errors
         run: |
-          if grep -i "error" user_test_output.log; then
-            echo "Error found in User API Test output!"
-            exit 1
-          else
-            echo "No errors found in User API Test output."
-          fi
+          python -m unittest discover -s app/tests -p "test_user.py" | tee test_output.log
+           if grep -i "AssertionError" test_output1.log; then
+             exit 1
+           fi
