@@ -31,6 +31,7 @@ jobs:
       # Set up the virtual environment and navigate to the app directory
       - name: Set up Virtual Environment and Navigate
         run: |
+          pip install -r requirement.txt
           python -m venv venv
           source venv/bin/activate
 
@@ -51,7 +52,7 @@ jobs:
         run: |
           python -m unittest discover -s app/tests -p "test_healthcheck.py" 2>&1 | tee healthcheck_output.log
           echo "HERE"
-          cat test_output.log
+          cat healthcheck_output.log
           if grep -E "Traceback" healthcheck_output.log; then
             echo "Test failed due to an error or failure!"
             exit 1
