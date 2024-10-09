@@ -98,15 +98,16 @@ jobs:
       - name: Where
         run: |
           pwd
+          ls
         shell: bash
 
       - name: Chan
         run: |
-          python run.py
+          flask run
 
       - name: Flask
         run: |
-          flask run
+          python run.py
 
       # Run HealthCheck Tests and check for errors
       - name: Run HealthCheck Tests
