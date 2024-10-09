@@ -26,7 +26,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f requirements.txt ]; then pip install -r requirement.txt; fi
 
       # Create a .env file with required environment variables
       - name: Create .env file
@@ -45,13 +45,13 @@ jobs:
         run: |
           python -m venv venv
           source venv/bin/activate
-          pip install -r requirements.txt
+          pip install -r requirement.txt
 
       # Run HealthCheck tests
       - name: Check Health API Test Output for Errors
         run: |
           source venv/bin/activate
-          python -m unittest discover -s tests -p 'test_healthcheck.py' 2> tee user_output.log 
+          python -m unittest discover -s app/tests -p 'test_healthcheck.py' 2> tee user_output.log 
           if grep -i 'AssertionError' user_output.log; then
             echo 'Test failed due to an error or failure!'
             exit 1
