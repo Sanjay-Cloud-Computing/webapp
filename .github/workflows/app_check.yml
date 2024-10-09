@@ -82,24 +82,22 @@ jobs:
           if [ -f requirement.txt ]; then pip install -r requirement.txt; fi
 
       # Create and activate virtual environment
-      - name: Set up Virtual Environment
-        run: |
-          python -m venv venv
-          echo "Virtual environment created successfully."
-          source venv/bin/activate
-          echo "Virtual environment activated."
+      # - name: Set up Virtual Environment
+      #   run: |
+      #     python -m venv venv
+      #     echo "Virtual environment created successfully."
+      #     source venv/bin/activate
+      #     echo "Virtual environment activated."
 
       # Install dependencies inside the virtual environment
       - name: Install dependencies in venv
         run: |
-          source venv/bin/activate
           pip install -r requirement.txt
         shell: bash
 
       # Run HealthCheck Tests and check for errors
       - name: Run HealthCheck Tests
         run: |
-          source venv/bin/activate
           python -m unittest discover -s app/tests -p 'test_healthcheck.py' &> user_output.log
           cat user_output.log
           if grep -i 'AssertionError' user_output.log; then
@@ -111,7 +109,6 @@ jobs:
       # Run User API Tests and check for errors
       - name: Run User API Tests
         run: |
-          source venv/bin/activate
           python -m unittest discover -s app/tests -p 'test_user.py' &> user_output.log
           cat user_output.log
           if grep -i 'AssertionError' user_output.log; then
