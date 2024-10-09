@@ -34,9 +34,9 @@ jobs:
           pip install -r requirement.txt
           python -m venv venv
 
-      - name: Check User API Test Output for Errors
+      - name: Check Health API Test Output for Errors
         run: |
-          python3 -m unittest discover -s tests -p 'test_healthcheck.py' 2> user_output.log 
+          python -m unittest discover -s tests -p 'test_healthcheck.py' 2> tee user_output.log 
           if grep -i 'AssertionError' user_output.log; then
             echo 'Test failed due to an error or failure!'
             exit 1
@@ -44,7 +44,7 @@ jobs:
 
       - name: Check User API Test Output for Errors
         run: |
-          python3 -m unittest discover -s app/tests -p 'test_user.py' 2> user_output.log 
+          python -m unittest discover -s app/tests -p 'test_user.py' 2> tee user_output.log 
           if grep -i 'AssertionError' user_output.log; then
             echo 'Test failed due to an error or failure!'
             exit 1
