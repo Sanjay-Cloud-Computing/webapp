@@ -81,44 +81,41 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirement.txt ]; then pip install -r requirement.txt; fi
 
-      # Create a .env file with required environment variables
-      - name: Create .env file
-        run: |
-          echo "FLASK_ENV=testing" >> .env
-          echo "DATABASE_URL=sqlite:///:memory:" >> .env
-          echo "SQLALCHEMY_DATABASE_URI=sqlite:///:memory:" >> .env
-          echo ".env file created with test configurations."
-
-      # Display the .env file (for debugging purposes)
-      - name: Display .env file
-        run: cat .env
-
-      # Set up the virtual environment
-      - name: Set up Virtual Environment and Navigate
+      # Create and activate virtual environment
+      - name: Set up Virtual Environment
         run: |
           python -m venv venv
+          echo "Virtual environment created successfully."
+          source venv/bin/activate
+          echo "Virtual environment activated."
+
+      # Install dependencies inside the virtual environment
+      - name: Install dependencies in venv
+        run: |
           source venv/bin/activate
           pip install -r requirement.txt
+        shell: bash
 
-      # Run HealthCheck tests
-      - name: Check Health API Test Output for Errors
+      # Run HealthCheck Tests and check for errors
+      - name: Run HealthCheck Tests
         run: |
           source venv/bin/activate
-          python -m unittest discover -s app/tests -p 'test_healthcheck.py' 2> tee user_output.log 
+          python -m unittest discover -s app/tests -p 'test_healthcheck.py' &> user_output.log
+          cat user_output.log
           if grep -i 'AssertionError' user_output.log; then
-            echo 'Test failed due to an error or failure!'
+            echo 'Test failed due to an AssertionError!'
             exit 1
           fi
+        shell: bash
 
-      # Run User API tests with .env variables
-      - name: Run User API Test Output with .env Configuration
-        env:
-          FLASK_ENV: testing
-          SQLALCHEMY_DATABASE_URI: "sqlite:///:memory:"
+      # Run User API Tests and check for errors
+      - name: Run User API Tests
         run: |
           source venv/bin/activate
-          python -m unittest discover -s app/tests -p 'test_user.py' 2> tee user_output.log 
+          python -m unittest discover -s app/tests -p 'test_user.py' &> user_output.log
+          cat user_output.log
           if grep -i 'AssertionError' user_output.log; then
-            echo 'Test failed due to an error or failure!'
+            echo 'Test failed due to an AssertionError!'
             exit 1
           fi
+        shell: bash
