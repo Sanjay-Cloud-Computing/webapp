@@ -43,7 +43,7 @@ class CombinedTestCase(unittest.TestCase):
             "password": "password123"
         }
         response = self.client.post('/v1/user', data=json.dumps(user_data))
-        self.assertEqual(response.status_code, 500) #400
+        self.assertEqual(response.status_code, 400) #400
         
     def test_create_user_extra_fields(self):
         """Test creating a user with extra fields."""
