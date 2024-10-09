@@ -33,7 +33,6 @@ jobs:
         run: |
           pip install -r requirement.txt
           python -m venv venv
-          source venv/bin/activate
 
       - name: Check User API Test Output for Errors
         run: |
