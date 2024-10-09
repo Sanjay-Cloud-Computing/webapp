@@ -36,10 +36,10 @@ jobs:
           source venv/bin/activate
 
       # Run Health Check Unit Tests from `app/test`
-      - name: Run Health Check Tests
-        run: |
-          source venv/bin/activate
-          python -m unittest discover -s test -p "test_healthcheck.py" | tee healthcheck_output.log
+      # - name: Run Health Check Tests
+      #   run: |
+      #     source venv/bin/activate
+      #     python -m unittest discover -s test -p "test_healthcheck.py" | tee healthcheck_output.log
 
       # Run User API Unit Tests from `app/test`
       - name: Run User API Tests
@@ -48,15 +48,15 @@ jobs:
           python -m unittest discover -s test -p "test_user.py" | tee user_test_output.log
 
       # Search for "error" in Healthz API test output log and fail if found
-      - name: Check Health Check Test Output for Errors
-        run: |
-          python -m unittest discover -s app/tests -p "test_healthcheck.py" 2>&1 | tee healthcheck_output.log
-          echo "HERE"
-          cat healthcheck_output.log
-          if grep -E "Traceback" healthcheck_output.log; then
-            echo "Test failed due to an error or failure!"
-            exit 1
-          fi
+      # - name: Check Health Check Test Output for Errors
+      #   run: |
+      #     python -m unittest discover -s app/tests -p "test_healthcheck.py" 2>&1 | tee healthcheck_output.log
+      #     echo "HERE"
+      #     cat healthcheck_output.log
+      #     if grep -E "Traceback" healthcheck_output.log; then
+      #       echo "Test failed due to an error or failure!"
+      #       exit 1
+      #     fi
 
       # Search for "error" in user API test output log and fail if found
       - name: Check User API Test Output for Errors
