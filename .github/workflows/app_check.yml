@@ -49,7 +49,7 @@ jobs:
       # Search for "error" in Healthz API test output log and fail if found
       - name: Check Health Check Test Output for Errors
         run: |
-          python -m unittest discover -s app/tests -p "test_healthcheck.py" 2>&1 | tee test_output.log
+          python -m unittest discover -s app/tests -p "test_healthcheck.py" 2>&1 | tee healthcheck_output.log
           echo "HERE"
           cat test_output.log
           if grep -E "Traceback" test_output.log; then
@@ -60,7 +60,7 @@ jobs:
       # Search for "error" in user API test output log and fail if found
       - name: Check User API Test Output for Errors
         run: |
-          python -m unittest discover -s app/tests -p "test_user.py" | tee test_output.log
+          python -m unittest discover -s app/tests -p "test_user.py" | tee user_test_output.log
           if grep -E "FAIL|ERROR|Traceback" test_output.log; then
             echo "Test failed due to an error or failure!"
             exit 1
