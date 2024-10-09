@@ -95,6 +95,19 @@ jobs:
           pip install -r requirement.txt
         shell: bash
 
+      - name: Where
+        run: |
+          pwd
+        shell: bash
+
+      - name: Chan
+        run: |
+          python run.py
+
+      - name: Flask
+        run: |
+          flask run
+
       # Run HealthCheck Tests and check for errors
       - name: Run HealthCheck Tests
         run: |
