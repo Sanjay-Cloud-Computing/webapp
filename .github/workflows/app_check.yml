@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up Python
+      # Set up Python 3.9
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
@@ -25,26 +25,45 @@ jobs:
       # Install dependencies from requirements.txt if it exists
       - name: Install dependencies
         run: |
-          ls -r
           python -m pip install --upgrade pip
-          if [ -f requirement.txt ]; then pip install -r requirement.txt; fi
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-      # Set up the virtual environment and navigate to the app directory
+      # Create a .env file with required environment variables
+      - name: Create .env file
+        run: |
+          echo "FLASK_ENV=testing" >> .env
+          echo "DATABASE_URL=sqlite:///:memory:" >> .env
+          echo "SQLALCHEMY_DATABASE_URI=sqlite:///:memory:" >> .env
+          echo ".env file created with test configurations."
+
+      # Display the .env file (for debugging purposes)
+      - name: Display .env file
+        run: cat .env
+
+      # Set up the virtual environment
       - name: Set up Virtual Environment and Navigate
         run: |
-          pip install -r requirement.txt
           python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
 
+      # Run HealthCheck tests
       - name: Check Health API Test Output for Errors
         run: |
+          source venv/bin/activate
           python -m unittest discover -s tests -p 'test_healthcheck.py' 2> tee user_output.log 
           if grep -i 'AssertionError' user_output.log; then
             echo 'Test failed due to an error or failure!'
             exit 1
           fi
 
-      - name: Check User API Test Output for Errors
+      # Run User API tests with .env variables
+      - name: Run User API Test Output with .env Configuration
+        env:
+          FLASK_ENV: testing
+          SQLALCHEMY_DATABASE_URI: "sqlite:///:memory:"
         run: |
+          source venv/bin/activate
           python -m unittest discover -s app/tests -p 'test_user.py' 2> tee user_output.log 
           if grep -i 'AssertionError' user_output.log; then
             echo 'Test failed due to an error or failure!'
