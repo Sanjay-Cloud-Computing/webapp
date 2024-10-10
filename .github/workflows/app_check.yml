@@ -26,38 +26,27 @@ jobs:
         run: |
           pip install -r requirement.txt
         shell: bash
-        # - name: Install MySQL DB
-        #   uses: mirromutth/mysql-action@v1.1
-        #   with:
-        #     host port: 3306
-        #     container port: 3306
-        #     character set server: "utf8"
-        #     collation server: "utf8_general_ci"
-        #     mysql version: "8.0"
-        #     mysql database: "test"
-        #     mysql root password: "password"
-        #     mysql user: "dbuser"
-        #     mysql password: "password"
 
-        env:
-          DB_DATABASE: test_db
-          DB_USER: root
-          DB_PASSWORD: root
+      - name: Install MySQL DB
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          host port: 3306
+          container port: 3306
+          character set server: "utf8"
+          collation server: "utf8_general_ci"
+          mysql version: "8.0"
+          mysql database: "test"
+          mysql root password: "password"
+          mysql user: "dbuser"
+          mysql password: "password"
 
       - name: Start MySQL
         run: |
-          sudo apt install mysql-server 
-          sudo systemctl start mysql
-
-      - name: Start DB
-        run: |
-          sudo /etc/init.d/mysql start
-          mysql -e "CREATE DATABASE IF NOT EXISTS $DB_DATABASE;" -u$DB_USER -p$DB_PASSWORD
+          sudo /etc/init.b/mysql start
 
       - name: Login my sql
         run: |
-          sudo mysql -u root
-          sudo mysql -u root -p "" -e "SELECT 1"
+          sudo mysql -u root -p "password" -e "SELECT 1"
 
       - name: Create User in database
         run: |
