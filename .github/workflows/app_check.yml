@@ -45,6 +45,11 @@ jobs:
           sudo apt install mysql-server 
           sudo systemctl start mysql
 
+      - name: Login my sql
+        run: |
+          sudo mysql -u root
+          sudo mysql -u root -p "" -e "SELECT 1"
+
       - name: Create User in database
         run: |
           sudo mysql -e "CREATE USER 'dbuser'@'localhost' IDENTIFIED BY 'password'"
