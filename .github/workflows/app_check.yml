@@ -42,11 +42,11 @@ jobs:
 
       - name: Start MySQL
         run: |
-          service mysql status
+          service mysql start
 
       - name: Start MySQL
         run: |
-          service mysql start
+          service mysql status
 
       - name: Start MySQL
         run: |
