@@ -36,9 +36,6 @@ jobs:
           collation server: "utf8_general_ci"
           mysql version: "8.0"
           mysql database: "test"
-          mysql root password: "Mysql@1522"
-          mysql user: "root"
-          mysql password: "password"
 
       - name: Start MySQL
         run: |
