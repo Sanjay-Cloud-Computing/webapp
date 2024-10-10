@@ -47,14 +47,8 @@ jobs:
 
       - name: Create User in database
         run: |
-          mysql -u root -p << EOF
-            CREATE USER 'dbuser'@'localhost' IDENTIFIED BY 'password';
-            FLUSH PRIVILEGES;
-          EOF
-          mysql -u root -p << EOF
-            GRANT ALL PRIVILEGES ON test.* TO 'dbuser'@'localhost';
-            FLUSH PRIVILEGES;
-          EOF
+          sudo mysql -e "CREATE USER 'dbuser'@'localhost' IDENTIFIED BY 'password'"
+          sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'dbuser'@localhost IDENTIFIED BY 'password'"
 
       - name: Create env user
         run: |
