@@ -40,6 +40,19 @@ jobs:
           mysql user: "root"
           mysql password: "password"
 
+      - name: Start MySQL
+        run: |
+          service mysql status
+
+      - name: Start MySQL
+        run: |
+          service mysql start
+
+      - name: Start MySQL
+        run: |
+          sudo apt install mysql-server -y
+          sudo systemctl start mysql
+
       - name: Create User in database
         run: |
           mysql -u root -p << EOF
