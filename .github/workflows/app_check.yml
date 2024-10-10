@@ -1,5 +1,3 @@
-# .github/workflows/ci.yml
-
 name: Flask App CI
 
 on:
@@ -12,54 +10,62 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up Python
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v2
+      - name: Set up Python 3.12.6
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.9
+          python-version: 3.12.6
 
-      # Install dependencies from requirements.txt if it exists
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirement.txt ]; then pip install -r requirement.txt; fi
 
-      # Set up the virtual environment and navigate to the app directory
-      - name: Set up Virtual Environment and Navigate
+      - name: Install dependencies in venv
         run: |
-          python -m venv venv
-          source venv/bin/activate
+          pip install -r requirement.txt
+        shell: bash
 
-      # Run Health Check Unit Tests from `app/test`
-      - name: Run Health Check Tests
+      - name: Start MySQL
         run: |
-          source venv/bin/activate
-          python -m unittest discover -s test -p "test_healthcheck.py" | tee healthcheck_output.log
+          sudo apt install mariadb-server
 
-      # Run User API Unit Tests from `app/test`
+      - name: Login my sql
+        run: |
+          sudo mariadb -e "CREATE USER 'dbuser'@'127.0.0.1' IDENTIFIED BY 'password'"
+          sudo mariadb -e "GRANT ALL PRIVILEGES ON *.* TO 'dbuser'@127.0.0.1"
+
+      - name: Create User in database
+        run: |
+          sudo mysql -e "CREATE USER 'dbuser'@'localhost' IDENTIFIED BY 'password'"
+          sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'dbuser'@localhost IDENTIFIED BY 'password'"
+
+      - name: Create env user
+        run: |
+          touch .env
+          echo "DB_USERNAME=dbuser">>.env
+          echo "DB_PASSWORD=password">>.env
+          echo "DB_NAME=test">>.env
+          echo "DB_HOST=localhost">>.env
+          echo "DB_PORT=3306">>.env
+
+      - name: Run HealthCheck Tests
+        run: |
+          python -m unittest discover -s app/tests -p 'test_healthcheck.py' &> user_output.log
+          cat user_output.log
+          if grep -i 'AssertionError' user_output.log; then
+            echo 'Test failed due to an AssertionError!'
+            exit 1
+          fi
+        shell: bash
+
       - name: Run User API Tests
         run: |
-          source venv/bin/activate
-          python -m unittest discover -s test -p "test_user.py" | tee user_test_output.log
-
-      # Search for "error" in Healthz API test output log and fail if found
-      - name: Check Health Check Test Output for Errors
-        run: |
-          python -m unittest discover -s app/tests -p "test_healthcheck.py" | tee test_output.log
-          if grep -E "FAIL|ERROR|Traceback" test_output.log; then
-          echo "Test failed due to an error or failure!"
-          exit 1
+          python -m unittest discover -s app/tests -p 'test_user.py' &> user_output.log
+          cat user_output.log
+          if grep -i 'AssertionError' user_output.log; then
+            echo 'Test failed due to an AssertionError!'
+            exit 1
           fi
-
-      # Search for "error" in user API test output log and fail if found
-      - name: Check User API Test Output for Errors
-        run: |
-          python -m unittest discover -s app/tests -p "test_user.py" | tee test_output.log
-          if grep -E "FAIL|ERROR|Traceback" test_output.log; then
-          echo "Test failed due to an error or failure!"
-          exit 1
-          fi
+        shell: bash

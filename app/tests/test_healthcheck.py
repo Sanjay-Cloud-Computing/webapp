@@ -1,8 +1,7 @@
 import unittest
-from unittest.mock import patch, MagicMock
-from flask import Flask, app
+from unittest.mock import MagicMock
+from flask import app
 from run import app
-
 
 class HealthCheckTestCase(unittest.TestCase):
 
