@@ -60,7 +60,6 @@ jobs:
           fi
         shell: bash
 
-      # Run User API Tests and check for errors
       - name: Run User API Tests
         run: |
           python -m unittest discover -s app/tests -p 'test_user.py' &> user_output.log

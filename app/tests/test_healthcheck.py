@@ -31,7 +31,7 @@ class HealthCheckTestCase(unittest.TestCase):
     def test_invalid_path(self):
        
         response = self.app.get('/invalidpath')
-        self.assertEqual(response.status_code, 403)# 404
+        self.assertEqual(response.status_code, 404)
         self.assertEqual(response.headers['Cache-Control'], 'no-cache, no-store, must-revalidate')
 
 if __name__ == '__main__':
