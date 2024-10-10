@@ -59,13 +59,17 @@ jobs:
           echo "DB_HOST=localhost">>.env
           echo "DB_PORT=3306">>.env
 
+      - name: Run
+        run: |
+          python run.py
+
       - name: Run HealthCheck Tests
         run: |
           python -m unittest discover -s app/tests -p 'test_healthcheck.py' &> user_output.log
           cat user_output.log
           if grep -i 'AssertionError' user_output.log; then
             echo 'Test failed due to an AssertionError!'
-            exit 0
+            exit 1
           fi
         shell: bash
 
