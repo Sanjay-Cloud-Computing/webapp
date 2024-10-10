@@ -148,3 +148,12 @@ flask run --host=0.0.0.0 --port=5000
 ```bash
 curl http://your_vm_ip:5000/
 ```
+
+### Continuous Integration (CI)
+
+Set up automated testing using GitHub Action Workflows. Every time a pull request is created or updated, our CI workflow kicks in and runs all the tests to make sure everything is working as expected. If any tests fail, merging the pull request is blocked until the issues are fixed.
+
+- **Automated Test Execution**: The workflow is configured to run tests on each pull request to ensure code meets quality standards.
+- **Enforced Branch Rules**: Branch protection rules prevent merging if any tests fail, maintaining a reliable and stable codebase.
+
+If you want to see the details, check out the `.github/workflows/app_check.yml` file.
