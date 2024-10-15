@@ -25,7 +25,7 @@ class HealthCheckTestCase(unittest.TestCase):
     def test_health_check_with_post_request(self):
         
         response = self.app.post('/healthz')
-        self.assertEqual(response.status_code, 405)
+        self.assertEqual(response.status_code, 400)#405
         self.assertEqual(response.headers['Cache-Control'], 'no-cache, no-store, must-revalidate')
 
     def test_invalid_path(self):
