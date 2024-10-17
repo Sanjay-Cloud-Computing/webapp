@@ -46,6 +46,10 @@ jobs:
           sudo pip install -r requirement.txt
         shell: bash
 
+      - name: Version Check
+        run: |
+          flask --version
+
       # - name: Start MySQL
       #   run: |
       #     sudo apt install mariadb-server
