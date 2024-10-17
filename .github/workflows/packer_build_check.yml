@@ -2,7 +2,7 @@ name: Build Packer Image
 
 on:
   workflow_run:
-    workflows: ["PostCheck - Flask App CI"] # Wait for Application Check to complete
+    workflows: ["Flask App CI"] # Wait for Application Check to complete
     types:
       - completed
 
