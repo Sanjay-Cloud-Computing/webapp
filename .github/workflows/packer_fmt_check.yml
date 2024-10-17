@@ -1,0 +1,34 @@
+name: Packer Validate & Format
+
+on:
+  workflow_run:
+    workflows: ["PreCheck Flask App CI"] # Wait for Application Check to complete
+    types:
+      - completed
+
+jobs:
+  validate-packer:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Packer Build
+        uses: hashicorp/setup-packer@main
+        with:
+          version: "latest"
+
+      - name: Check Packer formatting
+        run: |
+          echo "Checking Packer template formatting..."
+          packer fmt -check packer/aws.pkr.hcl
+          if [ $? -ne 0 ]; then
+            echo "Packer format check failed. Fix the formatting and try again."
+            exit 1
+          fi
+
+      - name: Validate Packer template
+        run: |
+          echo "Validating Packer template..."
+          packer validate packer/aws.pkr.hcl
