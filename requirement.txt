@@ -27,3 +27,4 @@ typing_extensions==4.12.2
 Werkzeug==3.0.4
 zope.interface==7.0.3
 pymysql
+flask
