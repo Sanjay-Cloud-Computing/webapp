@@ -38,19 +38,14 @@ jobs:
 
       - name: Login my sql
         run: |
-          sudo mariadb -e "CREATE USER 'dbuser'@'127.0.0.1' IDENTIFIED BY 'password'"
+          sudo mariadb -e "CREATE USER 'admin'@'127.0.0.1' IDENTIFIED BY 'admin'"
           sudo mariadb -e "GRANT ALL PRIVILEGES ON *.* TO 'dbuser'@127.0.0.1"
-
-      - name: Create User in database
-        run: |
-          sudo mysql -e "CREATE USER 'dbuser'@'localhost' IDENTIFIED BY 'password'"
-          sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'dbuser'@localhost IDENTIFIED BY 'password'"
 
       - name: Create env user
         run: |
           touch .env
-          echo "DB_USERNAME=dbuser">>.env
-          echo "DB_PASSWORD=password">>.env
+          echo "DB_USERNAME=admin">>.env
+          echo "DB_PASSWORD=admin">>.env
           echo "DB_NAME=test">>.env
           echo "DB_HOST=localhost">>.env
           echo "DB_PORT=3306">>.env
