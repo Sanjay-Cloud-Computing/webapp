@@ -35,6 +35,12 @@ jobs:
         run: |
           sudo apt install mariadb-server
 
+      - name: Set Var password
+        env:
+          DB_PASS: ${{ secrets.DB_PASSWORD }}
+        run: |
+          ls
+
       - name: Login my sql
         run: |
           sudo mariadb -e "CREATE USER 'dbuser'@'127.0.0.1' IDENTIFIED BY '${DB_PASS}'"
