@@ -1,7 +1,7 @@
-name: "PreCheck Flask App CI"
+name: PostCheck - Flask App CI
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 

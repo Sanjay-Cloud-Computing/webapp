@@ -6,6 +6,9 @@ from .utilities.response_utils import response_handler
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy_utils import create_database, database_exists
+import sqlalchemy
+
+
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()

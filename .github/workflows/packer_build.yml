@@ -1,0 +1,44 @@
+name: Build Packer Image
+
+on:
+  workflow_run:
+    workflows: ["PostCheck - Flask App CI"] # Wait for Application Check to complete
+    types:
+      - completed
+
+jobs:
+  build-and-packer-job:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Package application
+        run: |
+          mkdir webapp
+          cp -r src webapp/
+          cp app.py webapp/
+          cp requirements.txt webapp/
+          cp README.md webapp/
+          zip -r webapp.zip webapp/
+
+      - name: Install Packer
+        run: |
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          sudo apt-get update
+          sudo apt-get install -y packer
+
+      - name: Run Packer Build
+        run: |
+          cd packer
+          packer init .
+          packer build .
