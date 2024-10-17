@@ -49,6 +49,7 @@ jobs:
       - name: Version Check
         run: |
           flask --version
+          which flask
 
       # - name: Start MySQL
       #   run: |
