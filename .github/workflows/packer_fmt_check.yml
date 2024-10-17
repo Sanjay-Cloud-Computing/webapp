@@ -21,9 +21,6 @@ jobs:
           cp README.md webapp/
           zip -r webapp.zip webapp/
 
-          ls
-          pwd
-
       - name: Packer Build
         uses: hashicorp/setup-packer@main
         with:

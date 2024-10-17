@@ -23,9 +23,9 @@ jobs:
 
       - name: Package application
         run: |
-          cp -r src webapp/
-          cp app.py webapp/
-          cp requirements.txt webapp/
+          cp -r app webapp/
+          cp run.py webapp/
+          cp requirement.txt webapp/
           cp README.md webapp/
           zip -r webapp.zip webapp/
 
