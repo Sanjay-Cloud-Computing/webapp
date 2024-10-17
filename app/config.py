@@ -5,7 +5,7 @@ load_dotenv()
 
 class config:
     SQLALCHEMY_DATABASE_URI = (
-    f"mysql+mysqlconnector://{os.getenv('DB_USERNAME')}:{os.getenv('DB_PASSWORD')}"
+    f"mariadb+pymysql://{os.getenv('DB_USERNAME')}:{os.getenv('DB_PASSWORD')}"
     f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
 )
     
