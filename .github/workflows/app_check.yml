@@ -37,13 +37,13 @@ jobs:
 
       - name: Login my sql
         run: |
-          sudo mariadb -e "CREATE USER 'dbuser'@'127.0.0.1' IDENTIFIED BY '${{ secrets.DB_PASSWORD }}'"
+          sudo mariadb -e "CREATE USER 'dbuser'@'127.0.0.1' IDENTIFIED BY 'password'"
           sudo mariadb -e "GRANT ALL PRIVILEGES ON *.* TO 'dbuser'@127.0.0.1"
 
       - name: Create User in database
         run: |
-          sudo mysql -e "CREATE USER 'dbuser'@'localhost' IDENTIFIED BY '${{ secrets.DB_PASSWORD }}'"
-          sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'dbuser'@localhost IDENTIFIED BY '${{ secrets.DB_PASSWORD }}'"
+          sudo mysql -e "CREATE USER 'dbuser'@'localhost' IDENTIFIED BY 'password'"
+          sudo mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'dbuser'@localhost IDENTIFIED BY 'password'"
 
       - name: Create env user
         run: |
