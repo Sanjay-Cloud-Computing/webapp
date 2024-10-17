@@ -50,6 +50,10 @@ jobs:
           echo "DB_HOST=localhost">>.env
           echo "DB_PORT=3306">>.env
 
+      - name: Run python
+        run: |
+          python run.py
+
       - name: Run HealthCheck Tests
         run: |
           python3 -m unittest discover -s app/tests -p 'test_healthcheck.py' &> user_output.log
