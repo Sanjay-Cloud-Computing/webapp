@@ -13,6 +13,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Package application
+        run: |
+          mkdir webapp
+          cp -r app webapp/
+          cp run.py webapp/
+          cp requirement.txt webapp/
+          cp README.md webapp/
+          zip -r webapp.zip webapp/
+
       - name: Packer Build
         uses: hashicorp/setup-packer@main
         with:
