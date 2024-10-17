@@ -60,7 +60,7 @@ jobs:
           cat user_output.log
           if grep -i 'AssertionError' user_output.log; then
             echo 'Test failed due to an AssertionError!'
-            exit 1
+            exit 1c
           fi
         shell: bash
 
