@@ -40,6 +40,7 @@ jobs:
           DB_PASS: ${{ secrets.DB_PASSWORD }}
         run: |
           ls
+          echo "DB_PASS is: ${DB_PASS}"
 
       - name: Login my sql
         run: |
