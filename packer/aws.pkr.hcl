@@ -83,7 +83,7 @@ build {
   ]
 
   provisioner "file" {
-    source      = "/SanjayRenukaprasad/webapp/webapp.zip"
+    source      = "/home/runner/work/webapp/webapp.zip"
     destination = "/tmp/webapp.zip"
   }
 
