@@ -33,7 +33,7 @@ variable "vpc_id" {
 
 variable "aws_user" {
   type        = string
-  default     = "demo"
+  default     = "888577037865"
   description = "Set to 'demo' to use the demo AWS account"
 }
 
@@ -66,7 +66,7 @@ source "amazon-ebs" "ubuntu" {
   ssh_username = "${var.ssh_username}"
   subnet_id    = "${var.subnet_id}"
   vpc_id       = "${var.vpc_id}"
-  ami_users    = ["${local.demo_account_id}"]
+  ami_users    = ["${var.aws_user}"]
 
   launch_block_device_mappings {
     delete_on_termination = true
