@@ -83,7 +83,7 @@ build {
   ]
 
   provisioner "file" {
-    source      = "/github/workspace/webapp.zip"
+    source      = "/SanjayRenukaprasad/webapp/webapp.zip"
     destination = "/tmp/webapp.zip"
   }
 
