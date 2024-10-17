@@ -18,6 +18,9 @@ jobs:
         with:
           version: "latest"
 
+      - name: "Initialize Packer"
+        run: packer init packer/.
+
       - name: Check Packer formatting
         run: |
           echo "Checking Packer template formatting..."
