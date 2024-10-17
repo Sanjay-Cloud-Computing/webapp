@@ -24,7 +24,7 @@ jobs:
 
       - name: Install dependencies in venv
         run: |
-          pip install -r requirement.txt
+          sudo pip install -r requirement.txt
         shell: bash
 
       - name: Start MySQL
