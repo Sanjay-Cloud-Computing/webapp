@@ -16,6 +16,8 @@ This document provides  instructions for setting up a development environment, d
   - [Creating a Python Virtual Environment](#creating-a-python-virtual-environment)
   - [Installing Python Dependencies](#installing-python-dependencies)
 - [Running the Application](#running-the-application)
+- [Packer Integration](#packer-integration)
+- [Continuous Integration (CI)](#continuous-integration)
 
 ## Prerequisites
 
@@ -149,9 +151,15 @@ flask run --host=0.0.0.0 --port=5000
 curl http://your_vm_ip:5000/
 ```
 
-### Continuous Integration (CI)
+### Packer Integration
+
+Packer is used to automate the creation of custom application images. These images will include all necessary application binaries, configurations, and databases. The images will be created and deployed via GitHub Actions.
+
+### Continuous Integration
 
 Set up automated testing using GitHub Action Workflows. Every time a pull request is created or updated, our CI workflow kicks in and runs all the tests to make sure everything is working as expected. If any tests fail, merging the pull request is blocked until the issues are fixed.
+
+When a pull request is merged into the main branch, the packer_build workflow is triggered. This workflow uses Packer to build and deploy a custom image.
 
 - **Automated Test Execution**: The workflow is configured to run tests on each pull request to ensure code meets quality standards.
 - **Enforced Branch Rules**: Branch protection rules prevent merging if any tests fail, maintaining a reliable and stable codebase.
