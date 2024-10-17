@@ -35,4 +35,8 @@ jobs:
       - name: Validate Packer template
         run: |
           echo "Validating Packer template..."
-          packer validate -check .
+          packer validate .
+          if [ $? -ne 0 ]; then
+            echo "Packer format check failed. Fix the formatting and try again."
+            exit 1
+          fi
