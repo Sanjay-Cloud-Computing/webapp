@@ -35,4 +35,4 @@ jobs:
       - name: Validate Packer template
         run: |
           echo "Validating Packer template..."
-          packer validate .
+          packer validate -check .
