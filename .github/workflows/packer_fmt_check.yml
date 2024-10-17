@@ -1,10 +1,9 @@
 name: Packer Validate & Format
 
 on:
-  workflow_run:
-    workflows: ["PreCheck Flask App CI"] # Wait for Application Check to complete
-    types:
-      - completed
+  pull_request:
+    branches:
+      - main
 
 jobs:
   validate-packer:
