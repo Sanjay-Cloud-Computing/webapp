@@ -23,6 +23,7 @@ jobs:
 
       - name: Package application
         run: |
+          mkdir -p webapp
           cp -r app webapp/app
           cp run.py webapp/
           cp requirement.txt webapp/
