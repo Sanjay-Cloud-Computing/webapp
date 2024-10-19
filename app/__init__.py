@@ -38,7 +38,7 @@ def create_app():
         
     # User route
     from app.routes.user_route import user_bp
-    app.register_blueprint(user_bp, url_prefix='/v1/')
+    app.register_blueprint(user_bp, url_prefix='/v2/')
     
     # Login user route
     from app.routes.login_user_route import auth_bp
