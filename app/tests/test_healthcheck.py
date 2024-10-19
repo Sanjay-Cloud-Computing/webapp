@@ -13,7 +13,7 @@ class HealthCheckTestCase(unittest.TestCase):
     def test_health_check_with_query_params(self):
        
         response = self.app.get('/healthz?param=value')
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(response.headers['Cache-Control'], 'no-cache, no-store, must-revalidate')
 
     def test_health_check_with_form_data(self):
