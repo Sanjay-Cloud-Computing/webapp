@@ -8,7 +8,7 @@ packer {
 }
 
 locals {
-  timestamp =     regex_replace(timestamp(), "[- TZ:]", "")
+  timestamp = regex_replace(timestamp(), "[- TZ:]", "")
 }
 
 variable "aws_region" {
@@ -23,7 +23,7 @@ variable "ssh_username" {
 
 variable "subnet_id" {
   type    = string
-  default =       "subnet-0c2f9279233534c28"
+  default = "subnet-0c2f9279233534c28"
 }
 
 variable "vpc_id" {
