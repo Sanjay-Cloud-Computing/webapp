@@ -8,7 +8,7 @@ packer {
 }
 
 locals {
-  timestamp = regex_replace(timestamp(), "[- TZ:]", "")
+  timestamp =     regex_replace(timestamp(), "[- TZ:]", "")
 }
 
 variable "aws_region" {
