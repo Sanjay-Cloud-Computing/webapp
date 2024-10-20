@@ -128,7 +128,7 @@ source venv/bin/activate
 1. Install required Python packages:
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirement.txt
 ```
 
 ### Running the Application
