@@ -34,7 +34,7 @@ jobs:
       - name: Check Packer formatting
         run: |
           echo "Checking Packer template formatting..."
-          packer fmt -check .
+          packer fmt -check -recursive .
           if [ $? -ne 0 ]; then
             echo "Packer format check failed. Fix the formatting and try again."
             exit 1
@@ -44,7 +44,7 @@ jobs:
         run: |
           echo "Validating Packer template..."
           cd packer
-          packer validate .
+          packer validate -recursive .
           if [ $? -ne 0 ]; then
             echo "Packer format check failed. Fix the formatting and try again."
             exit 1
