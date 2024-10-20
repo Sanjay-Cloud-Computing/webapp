@@ -1,4 +1,4 @@
-name: Flask App CI
+name: App CI
 
 on:
   pull_request:

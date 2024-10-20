@@ -2,7 +2,7 @@ name: Build Packer Image
 
 on:
   workflow_run:
-    workflows: ["Flask App CI"] # Wait for Application Check to complete
+    workflows: ["App CI"]
     types:
       - completed
 

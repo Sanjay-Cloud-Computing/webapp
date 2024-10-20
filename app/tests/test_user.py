@@ -42,7 +42,7 @@ class CombinedTestCase(unittest.TestCase):
             "email": "invalid_email",
             "password": "password123"
         }
-        response = self.client.post('/v2/user', data=json.dumps(user_data))
+        response = self.client.post('/v1/user', data=json.dumps(user_data))
         self.assertEqual(response.status_code, 400) #400
         
     def test_create_user_extra_fields(self):
@@ -54,7 +54,7 @@ class CombinedTestCase(unittest.TestCase):
             "password": "password123",
             "extra_field": "extra_value"
         }
-        response = self.client.post('/v2/user', data=json.dumps(user_data), content_type='application/json')
+        response = self.client.post('/v1/user', data=json.dumps(user_data), content_type='application/json')
         print("Response Status Code:", response.status_code)
         print("Response Data:", response.data.decode('utf-8'))
 
