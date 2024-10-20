@@ -2,7 +2,7 @@
 
 This document provides  instructions for setting up a development environment, deploying the web application to a remote server, configuring databases, and running the Flask application.
 
-## Table of Contents
+## Table of Content
 
 - [Prerequisites](#prerequisites)
 - [Virtual Machine Configuration](#virtual-machine-configuration)
