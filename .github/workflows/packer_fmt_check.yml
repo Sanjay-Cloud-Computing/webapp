@@ -31,21 +31,29 @@ jobs:
           cd packer
           packer init .
 
-      - name: Check Packer formatting
+      - name: Check Packer template formatting
         run: |
-          echo "Checking Packer template formatting..."
-          packer fmt -check -recursive .
+          echo "Checking Packer template formatting recursively..."
+          find . -name "*.hcl" -exec packer fmt -check {} \;
           if [ $? -ne 0 ]; then
             echo "Packer format check failed. Fix the formatting and try again."
             exit 1
           fi
 
-      - name: Validate Packer template
+      - name: Validate Packer templates
         run: |
-          echo "Validating Packer template..."
-          cd packer
-          packer validate -recursive .
+          echo "Validating Packer templates recursively..."
+          find . -name "*.hcl" -exec packer validate {} \;
           if [ $? -ne 0 ]; then
-            echo "Packer format check failed. Fix the formatting and try again."
+            echo "Packer validation check failed. Fix the validation issues and try again."
+            exit 1
+          fi
+
+      - name: Check Shell scripts
+        run: |
+          echo "Checking shell script formatting and syntax..."
+          find . -name "*.sh" -exec shellcheck {} \;
+          if [ $? -ne 0 ]; then
+            echo "Shell script check failed. Fix the issues and try again."
             exit 1
           fi
