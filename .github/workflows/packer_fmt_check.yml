@@ -44,7 +44,7 @@ jobs:
         run: |
           echo "Validating Packer template..."
           cd packer
-          packer validate -check packer/.
+          packer validate .
           if [ $? -ne 0 ]; then
             echo "Packer format check failed. Fix the formatting and try again."
             exit 1
