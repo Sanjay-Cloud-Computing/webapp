@@ -31,21 +31,40 @@ jobs:
           cd packer
           packer init .
 
-      - name: Check Packer template formatting
+      # - name: Check Packer template formatting
+      #   run: |
+      #     echo "Checking Packer template formatting recursively..."
+      #     find . -name "*.hcl" -exec packer fmt -check {} \;
+      #     if [ $? -ne 0 ]; then
+      #       echo "Packer format check failed. Fix the formatting and try again."
+      #       exit 1
+      #     fi
+
+      # - name: Validate Packer templates
+      #   run: |
+      #     echo "Validating Packer templates recursively..."
+      #     find . -name "*.hcl" -exec packer validate {} \;
+      #     if [ $? -ne 0 ]; then
+      #       echo "Packer validation check failed. Fix the validation issues and try again."
+      #       exit 1
+      #     fi
+
+      - name: Check Packer formatting
         run: |
-          echo "Checking Packer template formatting recursively..."
-          find . -name "*.hcl" -exec packer fmt -check {} \;
+          echo "Checking Packer template formatting..."
+          packer fmt -check .
           if [ $? -ne 0 ]; then
             echo "Packer format check failed. Fix the formatting and try again."
             exit 1
           fi
 
-      - name: Validate Packer templates
+      - name: Validate Packer template
         run: |
-          echo "Validating Packer templates recursively..."
-          find . -name "*.hcl" -exec packer validate {} \;
+          echo "Validating Packer template..."
+          cd packer
+          packer validate .
           if [ $? -ne 0 ]; then
-            echo "Packer validation check failed. Fix the validation issues and try again."
+            echo "Packer format check failed. Fix the formatting and try again."
             exit 1
           fi
 
