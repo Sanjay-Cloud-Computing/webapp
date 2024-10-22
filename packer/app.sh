@@ -51,8 +51,8 @@ sudo mv /tmp/app.service /etc/systemd/system/app.service
 # DB_PORT=3306
 # EOF'
 
-sudo chown -R csye6225:csye6225 /opt/webapp/.env
-sudo chmod -R 755 /opt/webapp/.env
+# sudo chown -R csye6225:csye6225 /opt/webapp/.env
+# sudo chmod -R 755 /opt/webapp/.env
 
 echo "Setting up virtual environment..."
 sudo apt-get install -y python3-venv
