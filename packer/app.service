@@ -6,7 +6,7 @@ After=network.target
 User=csye6225
 Group=csye6225
 WorkingDirectory=/opt/webapp
-EnvironmentFile=/opt/webapp/.env
+EnvironmentFile=/etc/environment
 ExecStart=/usr/local/bin/flask run --host=0.0.0.0 --port=5000
 Restart=always
 
