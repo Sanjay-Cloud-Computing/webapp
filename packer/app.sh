@@ -6,22 +6,25 @@ echo "Updating package index..."
 sudo apt-get update -y
 
 # Install necessary packages (Python, pip, MySQL, unzip) without prompts
-echo "Installing Python, pip, MySQL, and unzip..."
-sudo  apt-get install -y python3 python3-pip mysql-server unzip
+# echo "Installing Python, pip, MySQL, and unzip..."
+# sudo  apt-get install -y python3 python3-pip mysql-server unzip
+
+echo "Installing Python, pip, and unzip..."
+sudo apt-get install -y python3 python3-pip unzip
 
 # Install MariaDB (for this assignment)
-sudo apt install mariadb-server -y
-sudo apt-get install -y libmariadb-dev
+# sudo apt install mariadb-server -y
+# sudo apt-get install -y libmariadb-dev
 
 # Create a new non-login user for the application
 echo "Creating non-login user 'csye6225'..."
 sudo useradd --system --no-create-home --shell /usr/sbin/nologin csye6225
 
 # Set up MySQL user and privileges
-echo "Setting up MySQL..."
-sudo mariadb -e "CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';"
-sudo mariadb -e "GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost';"
-sudo mariadb -e "FLUSH PRIVILEGES;"
+# echo "Setting up MySQL..."
+# sudo mariadb -e "CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';"
+# sudo mariadb -e "GRANT ALL PRIVILEGES ON *.* TO 'admin'@'localhost';"
+# sudo mariadb -e "FLUSH PRIVILEGES;"
 
 # Unzip the webapp.zip file into /tmp/webapp
 echo "Extracting app to opt folder"
@@ -38,15 +41,15 @@ sudo chmod -R 755 /opt/webapp
 sudo mv /tmp/app.service /etc/systemd/system/app.service
 
 # Create the .env file with environment variables
-echo "Creating .env file for MySQL setup..."
-# cat <<EOF > /opt/webapp/.env
-sudo bash -c 'cat <<EOF > /opt/webapp/.env
-DB_USERNAME=admin
-DB_PASSWORD=admin
-DB_NAME=test
-DB_HOST=localhost
-DB_PORT=3306
-EOF'
+# echo "Creating .env file for MySQL setup..."
+# # cat <<EOF > /opt/webapp/.env
+# sudo bash -c 'cat <<EOF > /opt/webapp/.env
+# DB_USERNAME=admin
+# DB_PASSWORD=admin
+# DB_NAME=test
+# DB_HOST=localhost
+# DB_PORT=3306
+# EOF'
 
 sudo chown -R csye6225:csye6225 /opt/webapp/.env
 sudo chmod -R 755 /opt/webapp/.env
@@ -68,4 +71,4 @@ sudo pip install -r /opt/webapp/requirement.txt
 
 sudo systemctl daemon-reload
 sudo systemctl enable app.service
-sudo systemctl start app.service
+# sudo systemctl start app.service
