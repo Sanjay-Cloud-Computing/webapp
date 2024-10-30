@@ -33,7 +33,7 @@ def send_email_via_sendgrid(to_email, subject, content):
         "personalizations": [{
             "to": [{"email": to_email}]
         }],
-        "from": {"email": "noreply@dev.cloudsan.me"},
+        "from": {"email": "noreply@demo.cloudsan.me"},
         "subject": subject,
         "content": [{
             "type": "text/plain",
