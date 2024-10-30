@@ -32,8 +32,10 @@ sudo dpkg -i -E ./amazon-cloudwatch-agent.deb
 echo "Setting up CloudWatch Agent configuration..."
 
 echo "**** Listing /opt contents ****"
-# ls -r /opt/
+ls /opt/
 # ls -r /opt/aws
+sudo chown -R csye6225:csye6225 /opt/webapp/packer
+sudo chmod -R 755 /opt/webapp/packer
 
 sudo cp /opt/webapp/packer/amazon-cloudwatch-agent-config.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent-config.json
 
