@@ -28,6 +28,7 @@ jobs:
           cp run.py webapp/
           cp requirement.txt webapp/
           cp README.md webapp/
+          cp -r packer webapp/packer
           zip -r webapp.zip webapp/
 
       - name: Install Packer
