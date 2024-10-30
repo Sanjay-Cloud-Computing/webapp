@@ -38,7 +38,7 @@ ls /opt/
 ls /opt/webapp/
 ls /opt/webapp/app/controllers
 
-sudo cp /opt/webapp/packer/amazon-cloudwatch-agent-config.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent-config.json
+sudo cp /opt/webapp/amazon-cloudwatch-agent-config.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent-config.json
 
 sudo chown -R csye6225:csye6225 /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent-config.json
 sudo chmod -R 755 /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent-config.json
