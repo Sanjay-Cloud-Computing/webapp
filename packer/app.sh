@@ -10,10 +10,18 @@ sudo apt-get install -y python3 python3-pip unzip
 echo "Creating non-login user 'csye6225'..."
 sudo useradd --system --no-create-home --shell /usr/sbin/nologin csye6225
 
+pwd
+
 echo "Extracting app to /opt folder"
 sudo unzip /tmp/webapp.zip -d /opt/
 
 echo "**** Listing /opt contents ****"
+ls /opt/
+echo "inside webapp"
+ls /opt/webapp/
+
+pwd
+ls -R /opt/
 # ls -r /opt/
 # ls /opt/webapp/packer
 echo "Setting ownership of application files..."
@@ -38,7 +46,7 @@ ls /opt/
 ls /opt/webapp/
 ls /opt/webapp/app/controllers
 
-sudo cp /opt/webapp/amazon-cloudwatch-agent-config.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent-config.json
+sudo cp /opt/webapp/packer/amazon-cloudwatch-agent-config.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent-config.json
 
 sudo chown -R csye6225:csye6225 /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent-config.json
 sudo chmod -R 755 /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent-config.json
