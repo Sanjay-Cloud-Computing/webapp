@@ -24,3 +24,6 @@ typing_extensions==4.12.2
 utcdatetime==0.0.7
 Werkzeug==3.0.4
 zope.interface==7.0.3
+boto3==1.35.49
+statsd==4.0.1
+requests==2.32.3

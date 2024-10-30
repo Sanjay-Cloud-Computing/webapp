@@ -42,14 +42,12 @@ locals {
   demo_account_id = "888577037865"
 }
 
-
-
 source "amazon-ebs" "ubuntu" {
   region          = "${var.aws_region}"
   ami_name        = "app-packer_aws_${local.timestamp}"
-  ami_description = "AMI for Flask App"
+  ami_description = "AMI for Flask App with CloudWatch Agent"
   instance_type   = "t2.micro"
-  ami_regions     = ["us-east-1", ]
+  ami_regions     = ["us-east-1"]
   source_ami_filter {
     filters = {
       name                = "ubuntu/images/*ubuntu-jammy-22.04-amd64-server-*"
@@ -58,10 +56,6 @@ source "amazon-ebs" "ubuntu" {
     }
     most_recent = true
     owners      = ["099720109477"]
-  }
-  aws_polling {
-    delay_seconds = 120
-    max_attempts  = 50
   }
   ssh_username = "${var.ssh_username}"
   subnet_id    = "${var.subnet_id}"
@@ -83,11 +77,11 @@ build {
   ]
 
   provisioner "file" {
-    source      = "/home/runner/work/webapp/webapp/webapp.zip"
+    # source      = "/home/runner/work/webapp/webapp/webapp.zip"
+    source      = "/Users/sanjay/Documents/Cloud/a06/webapp.zip"
     destination = "/tmp/webapp.zip"
   }
 
-  # Copy the systemd service file to /etc/systemd/system/
   provisioner "file" {
     source      = "app.service"
     destination = "/tmp/app.service"
