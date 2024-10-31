@@ -41,7 +41,7 @@ sudo cp /opt/webapp/packer/amazon-cloudwatch-agent-config.json /opt/aws/amazon-c
 sudo chown -R csye6225:csye6225 /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent-config.json
 sudo chmod -R 755 /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent-config.json
 
-sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent-config.json -s
+# sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent-config.json -s
 
 # Setting up virtual environment for the app
 echo "Setting up virtual environment..."
