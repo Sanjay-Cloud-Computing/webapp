@@ -43,8 +43,6 @@ sudo chmod -R 755 /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent-c
 
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent-config.json -s
 
-# sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a start
-
 # Setting up virtual environment for the app
 echo "Setting up virtual environment..."
 sudo apt-get install -y python3-venv
