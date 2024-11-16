@@ -33,6 +33,10 @@ def verify_password(username, password):
             check_and_create_users_table()
             user = auth_service.verify_user_creds(username, password)
             if user:
+                # Block unverified users
+                if not user.is_verified:
+                    logger.warning("ERROR: Unverified user attempt to log in", extra={"severity": "ERROR"})
+                    return abort(response_handler(403))  # Forbidden
                 logger.info("INFO: User verified successfully", extra={"severity": "INFO"})
                 return user
             else:

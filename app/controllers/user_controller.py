@@ -1,14 +1,20 @@
-import logging
+import boto3
+import json
 from flask import request, abort, make_response, jsonify
 from datetime import datetime
 from app.services.user_service import userService
 from app.utilities.response_utils import response_handler
 from app.services.health_check_service import get_health
 from app.utilities.utc_convert_datetime import format_datetime, change_date_str
-from app.services.email_service import send_email
 from app.utilities.metrics import statsd_client, record_api_call, record_api_duration
 from time import time
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
+SNS_TOPIC_ARN = os.getenv('SNS_TOPIC_ARN')
+
+sns_client = boto3.client('sns')
 user_service = userService()
 
 # Configure logging
@@ -32,9 +38,18 @@ def create_user():
         if health_check:
             new_user = user_service.create_user(data)
             
-            # Send a welcome email
-            send_email(new_user.email, "Welcome!", "Thanks for signing up")
-            logger.info("INFO: Welcome email sent", extra={"severity": "INFO"})
+            # Publish message to SNS
+            sns_message = {
+                "user_id": new_user.id,
+                "email": new_user.email,
+                "created_at": format_datetime()
+            }
+            sns_client.publish(
+                TopicArn=SNS_TOPIC_ARN,
+                Message=json.dumps(sns_message),
+                Subject="New User Created"
+            )
+            logger.info("INFO: Message published to SNS topic", extra={"severity": "INFO"})
             
             response_body = {
                 "id": new_user.id,
