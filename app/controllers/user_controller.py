@@ -1,5 +1,6 @@
 import boto3
 import json
+import logging
 from flask import request, abort, make_response, jsonify
 from datetime import datetime
 from app.services.user_service import userService
