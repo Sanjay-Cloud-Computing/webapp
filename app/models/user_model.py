@@ -14,3 +14,4 @@ class User(db.Model):
     password = db.Column(db.String(255))
     account_updated = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc),onupdate=lambda: datetime.now(timezone.utc)) 
     account_created = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    is_verified = db.Column(db.Boolean, default=False)
