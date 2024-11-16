@@ -14,7 +14,10 @@ from dotenv import load_dotenv
 load_dotenv()
 SNS_TOPIC_ARN = os.getenv('SNS_TOPIC_ARN')
 
-sns_client = boto3.client('sns')
+region = os.getenv('AWS_REGION') or 'us-east-1'
+
+sns_client = boto3.client('sns', region_name=region)
+
 user_service = userService()
 
 # Configure logging
