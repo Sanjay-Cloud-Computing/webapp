@@ -38,7 +38,7 @@ class userService:
             new_user = User(
             first_name=data['first_name'],
             last_name=data['last_name'],
-            username=data['email'],
+            #username=data['email'],
             email=data['email'],
             password=hash_password(data['password']),
             account_created=datetime.strptime(format_datetime(), "%Y-%m-%dT%H:%M:%S.%fZ"),
