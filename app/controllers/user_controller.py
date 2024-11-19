@@ -1,5 +1,6 @@
 import boto3
 import logging
+import boto3
 from flask import request, abort, make_response, jsonify
 from datetime import datetime
 from app.services.user_service import userService
@@ -39,22 +40,23 @@ def create_user():
         
         if health_check:
             new_user = user_service.create_user(data)
-            
-            # Generate verification token and expiration time
             verification_token = str(uuid.uuid4())
-            expiration_time = datetime.now(datetime.timezone.utc) + timedelta(minutes=2)
+            expiration_time = datetime.now(datetime.timezone.utc)
 
             # Save verification token to database
-            email_verification = EmailVerification(
-                id=str(uuid.uuid4()),
-                user_id=new_user.id,
-                email=new_user.email,
-                token=verification_token,
-                created_at=datetime.now(datetime.timezone.utc),
-                expires_at=expiration_time
+            # email_verification = EmailVerification(
+            #     id=str(uuid.uuid4()),
+            #     user_id=new_user.id,
+            #     email=new_user.email,
+            #     token=verification_token,
+            #     created_at=datetime.now(datetime.timezone.utc),
+            #     expires_at=expiration_time
+            # )
+            # db.session.add(email_verification)
+            # db.session.commit()
+            email_verify = user_service.save_email_verification(
+                new_user.id,new_user.email,verification_token,expiration_time
             )
-            db.session.add(email_verification)
-            db.session.commit()
             
             # Publish message to SNS
             sns_message = {

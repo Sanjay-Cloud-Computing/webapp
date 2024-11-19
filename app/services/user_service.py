@@ -48,7 +48,7 @@ class userService:
             password=hash_password(data['password']),
             account_created=datetime.now(timezone.utc),
             account_updated=datetime.now(timezone.utc),
-            is_verified=False  # Initial status as unverified
+            is_verified=False
         )
         
         try:
@@ -60,20 +60,21 @@ class userService:
             db.session.rollback()
             raise ValueError("Database integrity error occurred while creating the user")
 
-    def save_email_verification(self, user_id, token, expires_at):
-        from app.models.email_verification_model import EmailVerification  # Ensure model is imported
+    def save_email_verification(self, user_id,email, verification_token, expiration_time):
         email_verification = EmailVerification(
             id=str(uuid.uuid4()),
             user_id=user_id,
-            token=token,
-            expires_at=expires_at,
-            created_at=datetime.now(timezone.utc)
+            email=email,
+            token=verification_token,
+            created_at=datetime.now(datetime.timezone.utc),
+            expires_at=expiration_time
         )
         
         try:
             # Save the email verification record to the database
             db.session.add(email_verification)
             db.session.commit()
+            return email_verification
         except IntegrityError:
             db.session.rollback()
             raise ValueError("Database integrity error occurred while saving the email verification record")
