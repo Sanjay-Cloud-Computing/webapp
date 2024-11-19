@@ -5,6 +5,8 @@ from app.utilities.login_user_utils import hash_password, is_valid_email
 from app.utilities.utc_convert_datetime import format_datetime
 from app.utilities.check_table_utils import check_and_create_users_table
 from sqlalchemy.exc import IntegrityError
+from app.models.email_verification_model import EmailVerification
+
 import uuid
 
 class userService:
