@@ -27,3 +27,4 @@ zope.interface==7.0.3
 boto3==1.35.49
 statsd==4.0.1
 requests==2.32.3
+email-validator==2.2.0
