@@ -1,4 +1,5 @@
 import logging
+import boto3
 from flask import request, abort, make_response, jsonify
 from datetime import datetime
 from app.services.user_service import userService
@@ -9,6 +10,8 @@ from app.services.email_service import send_email
 from app.utilities.metrics import statsd_client, record_api_call, record_api_duration
 from time import time
 from app.models.email_verification_model import EmailVerification
+import os
+from dotenv import load_dotenv
 
 user_service = userService()
 load_dotenv()
@@ -36,22 +39,23 @@ def create_user():
         
         if health_check:
             new_user = user_service.create_user(data)
-            
-            # Generate verification token and expiration time
             verification_token = str(uuid.uuid4())
-            expiration_time = datetime.now(datetime.timezone.utc) + timedelta(minutes=2)
+            expiration_time = datetime.now(datetime.timezone.utc)
 
             # Save verification token to database
-            email_verification = EmailVerification(
-                id=str(uuid.uuid4()),
-                user_id=new_user.id,
-                email=new_user.email,
-                token=verification_token,
-                created_at=datetime.now(datetime.timezone.utc),
-                expires_at=expiration_time
+            # email_verification = EmailVerification(
+            #     id=str(uuid.uuid4()),
+            #     user_id=new_user.id,
+            #     email=new_user.email,
+            #     token=verification_token,
+            #     created_at=datetime.now(datetime.timezone.utc),
+            #     expires_at=expiration_time
+            # )
+            # db.session.add(email_verification)
+            # db.session.commit()
+            email_verify = user_service.save_email_verification(
+                new_user.id,new_user.email,verification_token,expiration_time
             )
-            db.session.add(email_verification)
-            db.session.commit()
             
             # Publish message to SNS
             sns_message = {
