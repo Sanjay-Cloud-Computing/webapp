@@ -14,3 +14,4 @@ class EmailVerification(db.Model):
 
     def __repr__(self):
         return f"<EmailVerification {self.email}>"
+

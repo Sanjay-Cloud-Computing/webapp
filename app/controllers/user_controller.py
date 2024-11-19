@@ -9,6 +9,8 @@ from app.services.email_service import send_email
 from app.utilities.metrics import statsd_client, record_api_call, record_api_duration
 from time import time
 from app.models.email_verification_model import EmailVerification
+import os
+from dotenv import load_dotenv
 
 user_service = userService()
 load_dotenv()
