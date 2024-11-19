@@ -15,3 +15,4 @@ class User(db.Model):
     account_updated = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc),onupdate=lambda: datetime.now(timezone.utc)) 
     account_created = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     is_verified = db.Column(db.Boolean, default=False, nullable=False) 
+

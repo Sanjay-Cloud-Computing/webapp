@@ -1,3 +1,4 @@
+import boto3
 import logging
 import boto3
 from flask import request, abort, make_response, jsonify
