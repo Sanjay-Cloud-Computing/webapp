@@ -31,7 +31,7 @@ def create_user():
             return response_handler(400)
         
         user_data = request.get_json()
-        required_fields = {"first_name", "last_name", "password", "email", "token"}
+        required_fields = {"first_name", "last_name", "password", "email"}
 
         if not all(field in user_data for field in required_fields):
             logger.warning("Missing required fields in user data")

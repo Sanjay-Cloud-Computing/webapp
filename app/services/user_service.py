@@ -14,7 +14,6 @@ class userService:
         last_name = data.get("last_name")
         password = data.get("password")
         email = data.get("email")
-        token = data.get("token")
 
         # Validate email format
         if not is_valid_email(email):
@@ -59,7 +58,7 @@ class userService:
         email_verification = EmailVerification(
             id=str(uuid.uuid4()),
             user_id=new_user.id,
-            email=email,
+            email=new_user.email,
             token=verification_token,
             created_at=datetime.now(timezone.utc),
             expires_at=expiration_time
@@ -70,8 +69,8 @@ class userService:
         # Prepare SNS message
         sns_message = {
             "user_id": new_user.id,
-            "email": email,
-            "first_name": first_name,
+            "email": new_user.email,
+            "first_name": new_user.first_name,
             "verification_token": verification_token,
             "expires_at": expiration_time.isoformat()
         }

@@ -24,7 +24,7 @@ def create_app():
     with app.app_context():
         if not database_exists(engine.url):
             create_database(engine.url)
-        from .models import user_model, image_model
+        from .models import user_model, image_model, email_verification_model
         db.create_all()
         
     @app.before_request
