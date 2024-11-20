@@ -69,4 +69,3 @@ def create_app():
         return response_handler(400)
 
     return app
-
