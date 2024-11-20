@@ -3,6 +3,7 @@ from flask import request, jsonify, abort, make_response
 from .. import db
 from flask_httpauth import HTTPBasicAuth
 from app.models.user_model import User
+from app.models.user_verification import UserVerification  # Import UserVerification model
 from app.services.login_user_service import AuthService
 from app.utilities.response_utils import response_handler
 from app.utilities.utc_convert_datetime import format_datetime
@@ -55,8 +56,17 @@ def get_user_details():
     
     try:
         user_data = db.session.query(User).filter_by(email=auth.username()).first()
-        logger.info(f"INFO: User data retrieved: {user_data}", extra={"severity": "INFO"})
         
+        if not user_data:
+            logger.warning("ERROR: User not found", extra={"severity": "ERROR"})
+            return abort(response_handler(404))
+        
+        # Check if user is verified
+        verification_data = db.session.query(UserVerification).filter_by(user_id=user_data.id).first()
+        if not verification_data or not verification_data.verified:
+            logger.warning("ERROR: User account not verified", extra={"severity": "ERROR"})
+            return response_handler(403, message="User account not verified")
+
         if request.data or len(request.args) > 0 or request.data.strip() == b'{}' or request.form:
             logger.error("ERROR: Invalid request data for get_user_details", extra={"severity": "ERROR"})
             return abort(response_handler(400))
@@ -83,6 +93,18 @@ def update_user_details():
     logger.info("INFO: Updating user details", extra={"severity": "INFO"})
     
     try:
+        user_data = db.session.query(User).filter_by(email=auth.username()).first()
+        
+        if not user_data:
+            logger.warning("ERROR: User not found", extra={"severity": "ERROR"})
+            return abort(response_handler(404))
+
+        # Check if user is verified
+        verification_data = db.session.query(UserVerification).filter_by(user_id=user_data.id).first()
+        if not verification_data or not verification_data.verified:
+            logger.warning("ERROR: User account not verified", extra={"severity": "ERROR"})
+            return response_handler(403, message="User account not verified")
+        
         if not request.data or request.data is None or len(request.args) > 0 or request.data.strip() == b'{}':
             logger.error("ERROR: Missing or invalid request data", extra={"severity": "ERROR"})
             return response_handler(400)
@@ -94,7 +116,6 @@ def update_user_details():
             return response_handler(400)
         
         data = request.get_json()
-        user_data = db.session.query(User).filter_by(email=auth.username()).first()
         allowed_fields = {"first_name", "last_name", "password"}
 
         if not set(data.keys()).issubset(allowed_fields):
