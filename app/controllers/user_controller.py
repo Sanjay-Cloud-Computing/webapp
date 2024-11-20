@@ -17,7 +17,9 @@ logger = logging.getLogger(__name__)
 
 def create_user():
     start_time = time()
-    record_api_call('create_user')  # Track API call
+    record_api_call('create_user')
+    
+    # Track API call
     logger.info("INFO: Attempting to create new user", extra={"severity": "INFO"})
     
     try:
