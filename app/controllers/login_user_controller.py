@@ -3,7 +3,6 @@ from flask import request, jsonify, abort, make_response
 from .. import db
 from flask_httpauth import HTTPBasicAuth
 from app.models.user_model import User
-from app.models.user_verification import UserVerification  # Import UserVerification model
 from app.services.login_user_service import AuthService
 from app.utilities.response_utils import response_handler
 from app.utilities.utc_convert_datetime import format_datetime
@@ -11,6 +10,7 @@ from app.services.health_check_service import get_health
 from app.utilities.check_table_utils import check_and_create_users_table
 from app.utilities.utc_convert_datetime import change_date_str
 from app.utilities.metrics import statsd_client, record_api_call, record_api_duration
+from app.services.verify_middleware import verify_user_middleware
 from time import time
 
 auth = HTTPBasicAuth()
@@ -34,10 +34,6 @@ def verify_password(username, password):
             check_and_create_users_table()
             user = auth_service.verify_user_creds(username, password)
             if user:
-                # Block unverified users
-                if not user.is_verified:
-                    logger.warning("ERROR: Unverified user attempt to log in", extra={"severity": "ERROR"})
-                    return abort(response_handler(403))  # Forbidden
                 logger.info("INFO: User verified successfully", extra={"severity": "INFO"})
                 return user
             else:
@@ -48,7 +44,8 @@ def verify_password(username, password):
             abort(response_handler(503))
     finally:
         record_api_duration('verify_password', (time() - start_time) * 1000)  # Record total API call duration
-
+        
+@verify_user_middleware
 def get_user_details():
     start_time = time()
     record_api_call('get_user_details')  # Track API call
@@ -56,17 +53,10 @@ def get_user_details():
     
     try:
         user_data = db.session.query(User).filter_by(email=auth.username()).first()
+        logger.info(f"INFO: User data retrieved: {user_data}", extra={"severity": "INFO"})
         
-        if not user_data:
-            logger.warning("ERROR: User not found", extra={"severity": "ERROR"})
-            return abort(response_handler(404))
-        
-        # Check if user is verified
-        verification_data = db.session.query(UserVerification).filter_by(user_id=user_data.id).first()
-        if not verification_data or not verification_data.verified:
-            logger.warning("ERROR: User account not verified", extra={"severity": "ERROR"})
-            return response_handler(403, message="User account not verified")
-
+        if not user_data.is_verified:
+            abort(403)
         if request.data or len(request.args) > 0 or request.data.strip() == b'{}' or request.form:
             logger.error("ERROR: Invalid request data for get_user_details", extra={"severity": "ERROR"})
             return abort(response_handler(400))
@@ -93,18 +83,6 @@ def update_user_details():
     logger.info("INFO: Updating user details", extra={"severity": "INFO"})
     
     try:
-        user_data = db.session.query(User).filter_by(email=auth.username()).first()
-        
-        if not user_data:
-            logger.warning("ERROR: User not found", extra={"severity": "ERROR"})
-            return abort(response_handler(404))
-
-        # Check if user is verified
-        verification_data = db.session.query(UserVerification).filter_by(user_id=user_data.id).first()
-        if not verification_data or not verification_data.verified:
-            logger.warning("ERROR: User account not verified", extra={"severity": "ERROR"})
-            return response_handler(403, message="User account not verified")
-        
         if not request.data or request.data is None or len(request.args) > 0 or request.data.strip() == b'{}':
             logger.error("ERROR: Missing or invalid request data", extra={"severity": "ERROR"})
             return response_handler(400)
@@ -116,6 +94,7 @@ def update_user_details():
             return response_handler(400)
         
         data = request.get_json()
+        user_data = db.session.query(User).filter_by(email=auth.username()).first()
         allowed_fields = {"first_name", "last_name", "password"}
 
         if not set(data.keys()).issubset(allowed_fields):
