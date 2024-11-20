@@ -1,5 +1,5 @@
 from app import db
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime, timezone
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime
 from datetime import datetime, timedelta, timezone
 
 class Verification(db.Model):
