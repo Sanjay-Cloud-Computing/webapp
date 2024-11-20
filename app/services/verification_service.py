@@ -21,8 +21,11 @@ class VerificationService:
                 logger.warning(f"WARNING: No verification record found for user: {user_email} and token: {token}", extra={"severity": "WARNING"})
                 return False
 
+            expiry = verification.expiry
+            if expiry.tzinfo is None:
+                expiry = expiry.replace(tzinfo=timezone.utc)
             # Check if the token is expired
-            if verification.expiry < datetime.now(timezone.utc):
+            if expiry< datetime.now(timezone.utc):
                 logger.warning(f"WARNING: Token expired for user: {user_email}", extra={"severity": "WARNING"})
                 return False
 

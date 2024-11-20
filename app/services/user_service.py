@@ -9,6 +9,10 @@ from sqlalchemy import String, Integer, DateTime
 import uuid
 from app.models.verification_model import Verification
 import json
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -84,7 +88,7 @@ class userService:
         logger.info(f"INFO: Publishing verification token to SNS for email {email}", extra={"severity": "INFO"})
         
         sns = boto3.client('sns', region_name='us-east-1')
-        topic_arn = 'arn:aws:sns:your-region:your-account-id:your-topic-name'  # Replace with terraform .env variable
+        topic_arn =  os.getenv('SNS_TOPIC_ARN')
 
         message = {
             'email': email,

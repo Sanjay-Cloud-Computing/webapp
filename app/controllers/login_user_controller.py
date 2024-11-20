@@ -10,7 +10,7 @@ from app.services.health_check_service import get_health
 from app.utilities.check_table_utils import check_and_create_users_table
 from app.utilities.utc_convert_datetime import change_date_str
 from app.utilities.metrics import statsd_client, record_api_call, record_api_duration
-from app.services.verify_middleware import verify_user_middleware
+from app.models.verification_model import Verification
 from time import time
 
 auth = HTTPBasicAuth()
@@ -45,7 +45,7 @@ def verify_password(username, password):
     finally:
         record_api_duration('verify_password', (time() - start_time) * 1000)  # Record total API call duration
         
-@verify_user_middleware
+# @verify_user_middleware(auth.username())
 def get_user_details():
     start_time = time()
     record_api_call('get_user_details')  # Track API call
@@ -55,8 +55,20 @@ def get_user_details():
         user_data = db.session.query(User).filter_by(email=auth.username()).first()
         logger.info(f"INFO: User data retrieved: {user_data}", extra={"severity": "INFO"})
         
-        if not user_data.is_verified:
-            abort(403)
+        verification = db.session.query(Verification, User).join(User, Verification.user_id == User.id).filter(
+                        User.email == auth.username(),
+                        Verification.is_verified == True
+                    ).first()
+                
+        print(verification)
+
+        if not verification:
+            logger.warning(f"WARNING: Access denied for unverified user: {auth.username()}", extra={"severity": "WARNING"})
+            abort(403)  # Forbidden
+
+        logger.info(f"INFO: User {auth.username()} is verified, proceeding to endpoint", extra={"severity": "INFO"})
+        
+       
         if request.data or len(request.args) > 0 or request.data.strip() == b'{}' or request.form:
             logger.error("ERROR: Invalid request data for get_user_details", extra={"severity": "ERROR"})
             return abort(response_handler(400))

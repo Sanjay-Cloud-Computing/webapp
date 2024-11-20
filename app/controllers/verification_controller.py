@@ -32,4 +32,4 @@ def verify_email():
 
     except Exception as e:
         logger.error(f"ERROR: Exception occurred during email verification: {e}", extra={"severity": "ERROR"})
-        abort(500, "Internal Server Error")
+        abort(400)
