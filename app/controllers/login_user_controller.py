@@ -64,7 +64,7 @@ def get_user_details():
 
         if not verification:
             logger.warning(f"WARNING: Access denied for unverified user: {auth.username()}", extra={"severity": "WARNING"})
-            abort(403)  # Forbidden
+            return abort(response_handler(403))
 
         logger.info(f"INFO: User {auth.username()} is verified, proceeding to endpoint", extra={"severity": "INFO"})
         
