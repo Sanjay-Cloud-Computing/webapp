@@ -1,12 +1,12 @@
+from datetime import datetime, timezone, timedelta
 from app import db
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime
-from datetime import datetime, timedelta, timezone
+import uuid
 
 class Verification(db.Model):
     __tablename__ = 'verification'
-    
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    verification_token = Column(String(255), nullable=False, unique=True)
-    is_verified = Column(Boolean, default=False, nullable=False)
-    expiry = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc)+ timedelta(minutes=2))
+
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
+    verification_token = db.Column(db.String(255), nullable=False, unique=True)
+    is_verified = db.Column(db.Boolean, default=False, nullable=False)
+    expiry = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(timezone.utc) + timedelta(minutes=2))
