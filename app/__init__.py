@@ -24,7 +24,7 @@ def create_app():
     with app.app_context():
         if not database_exists(engine.url):
             create_database(engine.url)
-        from .models import user_model, image_model
+        from .models import user_model, image_model, verification_model
         db.create_all()
         
     @app.before_request
@@ -39,6 +39,9 @@ def create_app():
     # User route
     from app.routes.user_route import user_bp
     app.register_blueprint(user_bp, url_prefix='/v1/')
+    
+    from app.routes.user_route import verify_bp
+    app.register_blueprint(verify_bp, url_prefix='/')
     
     # Login user route
     from app.routes.login_user_route import auth_bp
