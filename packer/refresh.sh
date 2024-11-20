@@ -25,8 +25,8 @@ echo "Latest AMI ID: $NEW_AMI_ID"
 
 # Create a new launch template version with the latest AMI
 echo "Creating a new Launch Template version..."
-EXISTING_TEMPLATE_VERSION=$(aws ec2 describe-launch-templates --launch-template-names $LAUNCH_TEMPLATE_NAME --query "LaunchTemplates[0].LatestVersionNumber" --output text)
-NEW_TEMPLATE_VERSION=$(aws ec2 create-launch-template-version --launch-template-name $LAUNCH_TEMPLATE_NAME --source-version "$EXISTING_TEMPLATE_VERSION" --launch-template-data "{\"ImageId\": \"$NEW_AMI_ID\"}" --query "LaunchTemplateVersion.VersionNumber" --output text)
+EXISTING_TEMPLATE_VERSION=$(aws ec2 describe-launch-templates --launch-template-names "$LAUNCH_TEMPLATE_NAME" --query "LaunchTemplates[0].LatestVersionNumber" --output text)
+NEW_TEMPLATE_VERSION=$(aws ec2 create-launch-template-version --launch-template-name "$LAUNCH_TEMPLATE_NAME" --source-version "$EXISTING_TEMPLATE_VERSION" --launch-template-data "{\"ImageId\": \"$NEW_AMI_ID\"}" --query "LaunchTemplateVersion.VersionNumber" --output text)
 if [[ -z "$NEW_TEMPLATE_VERSION" ]]; then
     echo "ERROR: Failed to create a new Launch Template version."
     exit 1
