@@ -20,7 +20,7 @@ def health_check():
             logger.warning("ERROR: Invalid request format", extra={"severity": "ERROR"})
             return response_handler(400)
         
-        if request.path == '/healthz' and request.method == 'GET':
+        if (request.path == '/healthz' or request.path == '/cicd') and request.method == 'GET':
             res = get_health()
             if res:
                 logger.info("Health check successful", extra={"severity": "INFO"})
