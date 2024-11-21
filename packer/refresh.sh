@@ -3,14 +3,20 @@
 set -e
 
 # Variables (Replace placeholders with your actual values)
-LAUNCH_TEMPLATE_NAME="csye6225_asg"
-# Get the latest Auto Scaling Group
-echo "Fetching the latest Auto Scaling Group..."
-LATEST_ASG_NAME=$(aws autoscaling describe-auto-scaling-groups --query "AutoScalingGroups | sort_by(@, &CreatedTime)[-1].AutoScalingGroupName" --output text)
-if [[ -z "$LATEST_ASG_NAME" ]]; then
-    echo "ERROR: Failed to fetch the latest Auto Scaling Group."
+LAUNCH_TEMPLATE_NAME=$(aws ec2 describe-launch-templates --query "LaunchTemplates | sort_by(@, &CreateTime)[-1].LaunchTemplateName" --output text)
+if [[ -z "$LAUNCH_TEMPLATE_NAME" ]]; then
+    echo "ERROR: No Launch Template found."
     exit 1
 fi
+
+# Get the latest Auto Scaling Group
+echo "Fetching the latest Auto Scaling Group..."
+AUTO_SCALING_GROUP_NAME=$(aws autoscaling describe-auto-scaling-groups --query "AutoScalingGroups | sort_by(@, &CreatedTime)[-1].AutoScalingGroupName" --output text)
+if [[ -z "$AUTO_SCALING_GROUP_NAME" ]]; then
+    echo "ERROR: No Auto Scaling Group found."
+    exit 1
+fi
+
 echo "Latest Auto Scaling Group: $LATEST_ASG_NAME"
 
 
@@ -25,7 +31,16 @@ echo "Latest AMI ID: $NEW_AMI_ID"
 
 # Create a new launch template version with the latest AMI
 echo "Creating a new Launch Template version..."
-EXISTING_TEMPLATE_VERSION=$(aws ec2 describe-launch-templates --launch-template-names "$LAUNCH_TEMPLATE_NAME" --query "LaunchTemplates[0].LatestVersionNumber" --output text)
+EXISTING_TEMPLATE_VERSION=$(aws ec2 describe-launch-templates --launch-template-names "$LAUNCH_TEMPLATE_NAME" --query "LaunchTemplates[0].LatestVersionNumber" --output text 2>/dev/null)
+# Check if the version number was retrieved successfully
+if [[ -z "$EXISTING_TEMPLATE_VERSION" ]]; then
+    echo "ERROR: Failed to retrieve the latest version number for launch template: $LAUNCH_TEMPLATE_NAME"
+    exit 1
+else
+    echo "Latest Version Number of Launch Template '$LAUNCH_TEMPLATE_NAME': $EXISTING_TEMPLATE_VERSION"
+fi
+
+
 NEW_TEMPLATE_VERSION=$(aws ec2 create-launch-template-version --launch-template-name "$LAUNCH_TEMPLATE_NAME" --source-version "$EXISTING_TEMPLATE_VERSION" --launch-template-data "{\"ImageId\": \"$NEW_AMI_ID\"}" --query "LaunchTemplateVersion.VersionNumber" --output text)
 if [[ -z "$NEW_TEMPLATE_VERSION" ]]; then
     echo "ERROR: Failed to create a new Launch Template version."
@@ -33,10 +48,17 @@ if [[ -z "$NEW_TEMPLATE_VERSION" ]]; then
 fi
 echo "New Launch Template Version: $NEW_TEMPLATE_VERSION"
 
+
+
 # Update the Auto Scaling Group with the new Launch Template version
 echo "Updating Auto Scaling Group with the new Launch Template..."
-aws autoscaling update-auto-scaling-group --auto-scaling-group-name "$AUTO_SCALING_GROUP_NAME" --launch-template "{\"LaunchTemplateName\": \"$LAUNCH_TEMPLATE_NAME\", \"Version\": \"$NEW_TEMPLATE_VERSION\"}"
+aws autoscaling update-auto-scaling-group \
+    --auto-scaling-group-name "$AUTO_SCALING_GROUP_NAME" \
+    --launch-template "{\"LaunchTemplateName\": \"$LAUNCH_TEMPLATE_NAME\", \"Version\": \"$NEW_TEMPLATE_VERSION\"}"
+
 echo "Auto Scaling Group updated successfully."
+
+
 
 # Start an instance refresh
 echo "Starting Instance Refresh..."
