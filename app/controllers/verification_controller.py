@@ -10,7 +10,6 @@ logger = logging.getLogger(__name__)
 verification_service = VerificationService()
 
 def verify_email():
-    # logger.info("INFO: Email verification initiated", extra={"severity": "INFO"}")
     try:
         # Extract parameters from the query string
         user_email = request.args.get('user')
