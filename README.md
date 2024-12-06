@@ -164,4 +164,4 @@ When a pull request is merged into the main branch, the packer_build workflow is
 - **Automated Test Execution**: The workflow is configured to run tests on each pull request to ensure code meets quality standards.
 - **Enforced Branch Rules**: Branch protection rules prevent merging if any tests fail, maintaining a reliable and stable codebase.
 
-If you want to see the details, check out the `.github/workflows/app_check.yml` file
+If you want to see the details, check out the `.github/workflows/app_check.yml`.
